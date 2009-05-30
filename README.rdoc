@@ -1,1 +1,78 @@
-#== developing.... 
+The gem RGhost has been developed to run independently of Rails but nowadays we're developing most of our application using Rails. Rails allows us a standard organization in MVC and my mail box is full of questions like "where will I create my rghost reports?", generally I answer, "create the report as a private method in controller". This doesn't satisfy everybody(and me either). With the goal of resolving that, I've been writing the new rghost-rails gem that will provide us the best way to work with rghost together with Rails.
+
+==Installation
+
+In your config/environment.rb add the follows lines
+
+ config.gem "rghost", :version => ">=0.8.7"
+ config.gem "rghost_rails"
+
+so install those gems using the rake task
+
+
+ sudo rake gems:install 
+
+Notice that that rghost-rails depends of rghost >= 0.8.7
+
+==Using it
+
+the rghost-rails needs some basic conventions
+
+1- A file into the view-layer should have .rghost.rb as a suffix, for example to a file/action called invoice
+
+
+ app/model/reports/invoice.rghost.rb
+
+
+2- Just use a block to format your report, for instance, using the same file invoice.rghost.rb explained above
+
+
+ RGhost::Document.new :paper => :A4 do |doc
+  doc.show "Hi this is my RGhost Report"
+  doc.next_row
+  doc.grid :data => @clients do |g|
+    g.column :name, :title => "Client name", :align => :center
+    g.column :site, :title => "Site url"
+    g.column :created_at, :title => "Client since", :format => lambda{|d| d.strftime('%d/%m/%Y')}
+  end
+ end
+
+3. In the controller just use a new method rghost_render, that you'll pass the report format such as pdf, jpg etc, the path for the file is the same as the action name and the file's name to download it
+
+
+ class ReportsController < ApplicationController
+   def print
+     @clients = Client.find :all
+     rghost_render :pdf, :report => {:action => 'invoice'}, :filename => 'invoice022009.pdf'
+   end
+ end
+
+
+You also can use the respond_to to render a report/document for each format, before do that, register the mime types entries that you'll use, in this example we'll use pdf, jpg and png, so the file config/initializers/mime_types.rb will be
+
+ Mime::Type.register "application/pdf", :pdf
+ Mime::Type.register "image/jpg", :jpg
+ Mime::Type.register "image/png", :png
+
+Now, write a block for each format
+
+
+ respond_to do |format|
+   format.html 
+   format.xml  { render :xml => @clients }
+   format.pdf { rghost_render :pdf, :report => 'invoice', :filename => "invoice022009.pdf" }
+   format.jpg { rghost_render :jpg, :report => 'invoice', :filename => "invoice022009.jpg" }
+   format.png { rghost_render :png, :report => 'invoice', :filename => "invoice022009.jpg" }
+ end
+
+Get your formats by url typing .format after action or action/id
+
+
+ /clients    #html
+ /clients.xml
+ /clients.pdf
+ /clients.jpg
+ /clients.png
+
+
+Please let me know if you find any bugs
