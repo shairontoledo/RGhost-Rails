@@ -27,7 +27,7 @@ the rghost-rails needs some basic conventions
 2- Just use a block to format your report, for instance, using the same file invoice.rghost.rb explained above
 
 
- RGhost::Document.new :paper => :A4 do |doc
+ RGhost::Document.new :paper => :A4 do |doc|
   doc.show "Hi this is my RGhost Report"
   doc.next_row
   doc.grid :data => @clients do |g|
