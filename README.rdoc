@@ -37,7 +37,7 @@ the rghost-rails needs some basic conventions
   end
  end
 
-3. In the controller just use a new method rghost_render, that you'll pass the report format such as pdf, jpg etc, the path for the file is the same as the action name and the file's name to download it
+3- In the controller just use a new method rghost_render, that you'll pass the report format such as pdf, jpg etc, the path for the file is the same as the action name and the file's name to download it
 
 
  class ReportsController < ApplicationController
