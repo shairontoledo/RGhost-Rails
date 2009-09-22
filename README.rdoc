@@ -21,7 +21,7 @@ the rghost-rails needs some basic conventions
 1- A file into the view-layer should have .rghost.rb as a suffix, for example to a file/action called invoice
 
 
- app/model/reports/invoice.rghost.rb
+ app/views/reports/invoice.rghost.rb
 
 
 2- Just use a block to format your report, for instance, using the same file invoice.rghost.rb explained above
