@@ -14,7 +14,7 @@ class ActionController::Base
     when NilClass
       File.join(view_paths, controller_path, self.action_name)
     end
-
+ 
     ActionView::Helpers.included_modules.each{|m| extend m}
     r=File.readlines("#{v}.rghost.rb")
     @__rgdoc__=nil
@@ -22,14 +22,13 @@ class ActionController::Base
     #instance_eval("@__doc__=#{r}")
     options.delete(:report)
     filename=options.delete(:filename)
-
+    disposition=options.delete(:disposition)
+ 
     rg=@__rgdoc__.render(format,options)
     out=rg.output
     raise "RGhost::Error #{rg.errors} - #{out}" if rg.error?
     data=out.readlines.join
     rg.clear_output
-    send_data(data, :filename => filename, :type => Mime::Type.lookup_by_extension(format.to_s))
-
-  end
-  
+    send_data(data, :filename => filename, :disposition => disposition, :type => Mime::Type.lookup_by_extension(format.to_s))
+  end  
 end
