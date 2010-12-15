@@ -5,7 +5,7 @@ require 'rubygems'
 
 spec = Gem::Specification.new do |s|
   s.name      = "rghost_rails"
-  s.version = "0.3.2"
+  s.version = "0.3.3"
   s.author    = "Shairon Toledo, Gabriel Sobrinho"
   s.email     = "shairon.toledo@gmail.com, gabriel.sobrinho@gmail.com"
   s.homepage = "http://github.com/shairontoledo/RGhost-Rails"
